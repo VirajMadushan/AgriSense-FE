@@ -1,35 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-
-
 
 @Component({
   selector: 'app-auth-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    HttpClientModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './auth-login.component.html',
   styleUrls: ['./auth-login.component.scss']
 })
-export class AuthLoginComponent implements OnInit {
+export class AuthLoginComponent {
   loginForm!: FormGroup;
   loading = false;
-  errorMessage = '';
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
   }
 
@@ -41,18 +36,18 @@ export class AuthLoginComponent implements OnInit {
     const { email, password } = this.loginForm.value;
 
     this.auth.login(email, password).subscribe({
-      next: (res) => {
+      next: res => {
         this.loading = false;
+        const role = res.role;
 
-        if (res.role === 'admin') {
-          this.router.navigate(['/admin/dashboard']);
+        if (role === 'admin') {
+          this.router.navigate(['/dashboard/admin-dashboard']);
         } else {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard/user-dashboard']);
         }
       },
       error: () => {
         this.loading = false;
-        this.errorMessage = 'Invalid credentials';
       }
     });
   }

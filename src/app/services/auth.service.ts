@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'  // ⬅️ Works even without modules
+  providedIn: 'root'  
 })
 export class AuthService {
   private api = 'http://localhost:4000/api/auth';
