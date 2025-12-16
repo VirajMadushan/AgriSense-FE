@@ -18,6 +18,12 @@ export interface NavigationItem {
   path?: string;
 }
 
+
+//  role helpers
+const getRole = () => (localStorage.getItem('role') || '').toLowerCase();
+const isAdmin = () => getRole() === 'admin';
+const isUser = () => getRole() === 'user';
+
 export const NavigationItems: NavigationItem[] = [
   {
     id: 'dashboard',
@@ -25,17 +31,32 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-navigation',
     children: [
+      //  Admin only
       {
-        id: 'default',
-        title: 'Default',
+        id: 'admin-dashboard',
+        title: 'Admin Dashboard',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard/default',
+        url: '/dashboard/admin-dashboard',
         icon: 'dashboard',
-        breadcrumbs: false
+        breadcrumbs: false,
+        hidden: !isAdmin()
+      },
+
+      // User only
+      {
+        id: 'user-dashboard',
+        title: 'My Dashboard',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/dashboard/user-dashboard',
+        icon: 'dashboard',
+        breadcrumbs: false,
+        hidden: !isUser()
       }
     ]
   },
+
   {
     id: 'authentication',
     title: 'Authentication',
@@ -54,9 +75,10 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
+
   {
     id: 'utilities',
-    title: 'services',
+    title: 'Services',
     type: 'group',
     icon: 'icon-navigation',
     children: [
@@ -65,7 +87,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Monitoring',
         type: 'item',
         classes: 'nav-item',
-        url: '/Monitoring',
+        url: '/monitoring',
         icon: 'user'
       },
       {
@@ -73,7 +95,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Analytics',
         type: 'item',
         classes: 'nav-item',
-        url: '/Analytics',
+        url: '/analytics',
         icon: 'line-chart'
       },
       {
@@ -81,20 +103,9 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Devices',
         type: 'item',
         classes: 'nav-item',
-        url: '/device',
-        icon: 'rocket',
-        
+        url: '/devices',
+        icon: 'rocket'
       },
-      
-      
-      // {
-      //   id: 'color',
-      //   title: 'Colors',
-      //   type: 'item',
-      //   classes: 'nav-item',
-      //   url: '/color',
-      //   icon: 'bg-colors'
-      // },
       {
         id: 'ant-icons',
         title: 'Ant Icons',
