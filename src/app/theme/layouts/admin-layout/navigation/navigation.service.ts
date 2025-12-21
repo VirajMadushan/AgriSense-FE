@@ -21,30 +21,30 @@ export class NavigationService {
         children: [
           ...(isAdmin
             ? [
-                {
-                  id: 'admin-dashboard',
-                  title: 'Admin Dashboard',
-                  type: 'item' as const,
-                  classes: 'nav-item',
-                  url: '/dashboard/admin-dashboard',
-                  icon: 'dashboard',
-                  breadcrumbs: false
-                }
-              ]
+              {
+                id: 'admin-dashboard',
+                title: 'Admin Dashboard',
+                type: 'item' as const,
+                classes: 'nav-item',
+                url: '/dashboard/admin-dashboard',
+                icon: 'dashboard',
+                breadcrumbs: false
+              }
+            ]
             : []),
 
           ...(isUser
             ? [
-                {
-                  id: 'user-dashboard',
-                  title: 'My Dashboard',
-                  type: 'item' as const,
-                  classes: 'nav-item',
-                  url: '/dashboard/user-dashboard',
-                  icon: 'dashboard',
-                  breadcrumbs: false
-                }
-              ]
+              {
+                id: 'user-dashboard',
+                title: 'My Dashboard',
+                type: 'item' as const,
+                classes: 'nav-item',
+                url: '/dashboard/user-dashboard',
+                icon: 'dashboard',
+                breadcrumbs: false
+              }
+            ]
             : [])
         ]
       },
@@ -76,7 +76,17 @@ export class NavigationService {
         children: [
           { id: 'monitoring', title: 'Monitoring', type: 'item' as const, classes: 'nav-item', url: '/monitoring', icon: 'user' },
           { id: 'analytics', title: 'Analytics', type: 'item' as const, classes: 'nav-item', url: '/analytics', icon: 'line-chart' },
-          { id: 'devices', title: 'Devices', type: 'item' as const, classes: 'nav-item', url: '/devices', icon: 'rocket' }
+          { id: 'devices', title: 'Devices', type: 'item' as const, classes: 'nav-item', url: '/devices', icon: 'rocket' },
+          ...(isAdmin
+            ? [{
+              id: 'users',
+              title: 'Users',
+              type: 'item' as const,
+              classes: 'nav-item',
+              url: '/users',
+              icon: 'user'
+            }]
+            : []),
         ]
       }
     ];

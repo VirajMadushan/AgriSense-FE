@@ -1,0 +1,82 @@
+<div class="card">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h4 class="mb-0">Users Management</h4>
+    <button class="btn btn-primary" (click)="openCreate()">+ Add User</button>
+  </div>
+
+  <div class="card-body">
+    <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+    <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+
+    <div *ngIf="loading">Loading...</div>
+
+    <div class="table-responsive" *ngIf="!loading">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th style="width: 180px;">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let u of users">
+            <td>{{ u.full_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>
+              <span class="badge bg-secondary" *ngIf="u.role === 'user'">User</span>
+              <span class="badge bg-primary" *ngIf="u.role === 'admin'">Admin</span>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary me-2" (click)="openEdit(u)">Edit</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="remove(u)">Delete</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="users.length === 0">
+            <td colspan="4" class="text-center text-muted">No users found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Simple Modal -->
+<div class="modal-backdrop-custom" *ngIf="showModal">
+  <div class="modal-card">
+    <h5 class="mb-3">{{ isEdit ? 'Edit User' : 'Add User' }}</h5>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input class="form-control" formControlName="full_name" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input class="form-control" formControlName="email" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Role</label>
+        <select class="form-select" formControlName="role">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ isEdit ? 'New Password (Optional)' : 'Password' }}</label>
+        <input type="password" class="form-control" formControlName="password" />
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-light" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">{{ isEdit ? 'Update' : 'Create' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

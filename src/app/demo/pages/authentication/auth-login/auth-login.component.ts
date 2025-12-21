@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class AuthLoginComponent {
   loginForm!: FormGroup;
-  loading = false;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -28,27 +28,48 @@ export class AuthLoginComponent {
     });
   }
 
-  onLogin() {
-    if (this.loginForm.invalid) return;
+  showFieldError(field: 'email' | 'password'): boolean {
+  const control = this.loginForm.get(field);
+  return !!(control && control.invalid && (control.touched || control.dirty));
+}
+  errorMsg = '';
+  loading = false;
 
-    this.loading = true;
+onLogin() {
+  this.errorMsg = '';
 
-    const { email, password } = this.loginForm.value;
-
-    this.auth.login(email, password).subscribe({
-      next: res => {
-        this.loading = false;
-        const role = res.role;
-
-        if (role === 'admin') {
-          this.router.navigate(['/dashboard/admin-dashboard']);
-        } else {
-          this.router.navigate(['/dashboard/user-dashboard']);
-        }
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
   }
+
+  this.loading = true;
+
+  const { email, password } = this.loginForm.value;
+
+  this.auth.login(email, password).subscribe({
+    next: (res: any) => {
+      this.loading = false;
+
+      localStorage.setItem('token', res.token);
+      localStorage.setItem('role', res.role);
+
+      if (res.role === 'admin') {
+        this.router.navigate(['/dashboard/admin-dashboard']);
+      } else {
+        this.router.navigate(['/dashboard/user-dashboard']);
+      }
+    },
+    error: (err) => {
+      this.loading = false;
+
+       console.log('LOGIN ERROR ', err); 
+      // show backend message if available
+      this.errorMsg =
+        err?.error?.message ||
+        'Invalid email or password. Please try again.';
+    }
+  });
+}
+
 }

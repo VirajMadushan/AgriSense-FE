@@ -4,36 +4,74 @@
       <div class="auth-header">
         <a href="javascript:"><img src="assets/images/1.ico" alt="logo" /></a>
       </div>
+
       <div class="card my-5">
         <div class="card-body">
-          <form [formGroup]="loginForm" (ngSubmit)="onLogin ()">
-          
-          <div class="d-flex justify-content-between align-items-end mb-4">
-            <h3 class="mb-0"><b>Login</b></h3>
-           
-          </div>
-          <div class="form-group mb-3">
-            <label class="form-label" for="email">Email Address</label>
-            <input type="email" class="form-control" id="email" placeholder="Email Address"  formControlName="email" />
-          </div>
-          <div class="form-group mb-3">
-            <label class="form-label" for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password"  formControlName="password"  />
-          </div>
-         
-         
-          <div class="d-grid mt-4">
-            <button type="submit" class="btn btn-primary" [disabled]="loading">Login</button>
-          </div>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
+            <div class="d-flex justify-content-between align-items-end mb-4">
+              <h3 class="mb-0"><b>Login</b></h3>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="form-group mb-3">
+              <label class="form-label" for="email">Email Address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Email Address"
+                formControlName="email"
+                [ngClass]="{ 'is-error': showFieldError('email') || !!errorMsg }"
+              />
+
+              <small class="field-error"
+                *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']">
+                Email is required
+              </small>
+
+              <small class="field-error"
+                *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']">
+                Enter a valid email address
+              </small>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="form-group mb-3">
+              <label class="form-label" for="password">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Password"
+                formControlName="password"
+                [ngClass]="{ 'is-error': showFieldError('password') || !!errorMsg }"
+              />
+
+              <small class="field-error"
+                *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']">
+                Password is required
+              </small>
+            </div>
+
+            <!-- BACKEND ERROR -->
+            <div class="login-error" *ngIf="errorMsg">
+              {{ errorMsg }}
+            </div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary" [disabled]="loading">Login</button>
+            </div>
+
           </form>
         </div>
       </div>
+
       <div class="auth-footer row">
         <div class="col my-1">
           <p class="m-0">
             Copyright ©
-            <a href="https://codedthemes.com/" target="_blank">VirajMadushan
-            </a>
+            <a href="https://codedthemes.com/" target="_blank">VirajMadushan</a>
           </p>
         </div>
       </div>

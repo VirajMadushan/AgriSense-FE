@@ -91,6 +91,16 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'user'
       },
       {
+        id: 'users',
+        title: 'Users',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/users',
+        icon: 'user',
+        hidden: !isAdmin()   // ADMIN ONLY
+      },
+
+      {
         id: 'analytics',
         title: 'Analytics',
         type: 'item',

@@ -36,20 +36,13 @@ const routes: Routes = [
     component: AdminComponent,
     canActivateChild: [authGuard],
     children: [
-      // -------------------------
-      // ADMIN DASHBOARD
-      // -------------------------
       {
         path: 'dashboard/admin-dashboard',
         loadComponent: () =>
           import('./dashboards/admin-dashboard/admin-dashboard.component')
             .then(c => c.AdminDashboardComponent),
-            canActivate: [adminGuard]
+        canActivate: [adminGuard]
       },
-
-      // -------------------------
-      // USER DASHBOARD
-      // -------------------------
       {
         path: 'dashboard/user-dashboard',
         loadComponent: () =>
@@ -57,15 +50,21 @@ const routes: Routes = [
             .then(c => c.UserDashboardComponent)
       },
 
-      // -------------------------
-      // OTHER PAGES
-      // -------------------------
       {
         path: 'typography',
         loadComponent: () =>
           import('./demo/component/basic-component/typography/typography.component')
             .then(c => c.TypographyComponent)
       },
+
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./demo/component/basic-component/users/users.component')
+            .then(c => c.UsersComponent),
+        canActivate: [adminGuard] // ✅ Admin only Users page
+      },
+
       {
         path: 'devices',
         loadComponent: () =>
@@ -108,11 +107,12 @@ const routes: Routes = [
   // ==========================
   // CATCH ALL
   // ==========================
- // { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'login' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

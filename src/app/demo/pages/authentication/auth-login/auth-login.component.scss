@@ -110,3 +110,23 @@ form i {
   top: 203px;
   right: 45px;
 }
+
+.field-error {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
+}
+
+.is-error {
+  border: 1px solid #dc3545 !important;
+  box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.15) !important;
+}
+
+.login-error {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
