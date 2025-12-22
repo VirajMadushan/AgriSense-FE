@@ -113,7 +113,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Devices',
         type: 'item',
         classes: 'nav-item',
-        url: '/devices',
+        url: '/device-management',
         icon: 'rocket'
       },
       {

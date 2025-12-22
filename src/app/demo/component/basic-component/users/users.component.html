@@ -5,8 +5,6 @@
   </div>
 
   <div class="card-body">
-    <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
-    <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
 
     <div *ngIf="loading">Loading...</div>
 
@@ -44,7 +42,7 @@
   </div>
 </div>
 
-<!-- Simple Modal -->
+
 <div class="modal-backdrop-custom" *ngIf="showModal">
   <div class="modal-card">
     <h5 class="mb-3">{{ isEdit ? 'Edit User' : 'Add User' }}</h5>

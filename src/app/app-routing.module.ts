@@ -62,15 +62,17 @@ const routes: Routes = [
         loadComponent: () =>
           import('./demo/component/basic-component/users/users.component')
             .then(c => c.UsersComponent),
-        canActivate: [adminGuard] // ✅ Admin only Users page
+        canActivate: [adminGuard]
       },
 
       {
-        path: 'devices',
+        path: 'device-management',
         loadComponent: () =>
-          import('./demo/component/basic-component/devices/devices.component')
-            .then(c => c.DevicesComponent)
+          import('./demo/component/basic-component/device-management/device-management.component')
+            .then(c => c.DeviceManagementComponent),
+        canActivate: [adminGuard]
       },
+
       {
         path: 'color',
         loadComponent: () =>

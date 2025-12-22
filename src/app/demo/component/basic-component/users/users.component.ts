@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 import { UsersService, UserDto } from 'src/app/services/users.service';
 
@@ -20,8 +21,6 @@ export class UsersComponent implements OnInit {
   selectedId: number | null = null;
 
   form!: FormGroup;
-  errorMsg = '';
-  successMsg = '';
 
   constructor(private fb: FormBuilder, private usersService: UsersService) {}
 
@@ -45,7 +44,11 @@ export class UsersComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        this.errorMsg = err?.error?.message || 'Failed to load users';
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err?.error?.message || 'Failed to load users'
+        });
       }
     });
   }
@@ -54,8 +57,7 @@ export class UsersComponent implements OnInit {
     this.showModal = true;
     this.isEdit = false;
     this.selectedId = null;
-    this.errorMsg = '';
-    this.successMsg = '';
+
     this.form.reset({ role: 'user' });
     this.form.get('password')?.setValidators([Validators.required]);
     this.form.get('password')?.updateValueAndValidity();
@@ -65,14 +67,12 @@ export class UsersComponent implements OnInit {
     this.showModal = true;
     this.isEdit = true;
     this.selectedId = user.id || null;
-    this.errorMsg = '';
-    this.successMsg = '';
 
     this.form.patchValue({
       full_name: user.full_name,
       email: user.email,
       role: user.role,
-      password: '' // optional when editing
+      password: ''
     });
 
     this.form.get('password')?.clearValidators();
@@ -84,26 +84,45 @@ export class UsersComponent implements OnInit {
   }
 
   submit() {
-    this.errorMsg = '';
-    this.successMsg = '';
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation error',
+        text: 'Please fill all required fields correctly.'
+      });
       return;
     }
 
-    const payload: UserDto = this.form.value;
+    const payload: UserDto = { ...this.form.value };
 
     if (!this.isEdit) {
+      // CREATE
       this.usersService.create(payload).subscribe({
         next: () => {
-          this.successMsg = 'User created successfully';
           this.showModal = false;
           this.loadUsers();
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'User created',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+          });
         },
-        error: (err) => (this.errorMsg = err?.error?.message || 'Create failed')
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Create failed',
+            text: err?.error?.message || 'Something went wrong'
+          });
+        }
       });
     } else {
+      // UPDATE
       if (!this.selectedId) return;
 
       // Don't send empty password on edit
@@ -111,24 +130,67 @@ export class UsersComponent implements OnInit {
 
       this.usersService.update(this.selectedId, payload).subscribe({
         next: () => {
-          this.successMsg = 'User updated successfully';
           this.showModal = false;
           this.loadUsers();
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'User updated',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+          });
         },
-        error: (err) => (this.errorMsg = err?.error?.message || 'Update failed')
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Update failed',
+            text: err?.error?.message || 'Something went wrong'
+          });
+        }
       });
     }
   }
 
+  // DELETE (modern confirm)
   remove(user: UserDto) {
     if (!user.id) return;
 
-    const ok = confirm(`Delete user ${user.email}?`);
-    if (!ok) return;
+    Swal.fire({
+      title: 'Delete user?',
+      text: `Delete ${user.email}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (!result.isConfirmed) return;
 
-    this.usersService.delete(user.id).subscribe({
-      next: () => this.loadUsers(),
-      error: (err) => (this.errorMsg = err?.error?.message || 'Delete failed')
+      this.usersService.delete(user.id!).subscribe({
+        next: () => {
+          this.loadUsers();
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'User deleted',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+          });
+        },
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Delete failed',
+            text: err?.error?.message || 'Something went wrong'
+          });
+        }
+      });
     });
   }
 }
