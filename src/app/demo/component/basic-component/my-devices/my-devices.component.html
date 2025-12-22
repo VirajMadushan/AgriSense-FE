@@ -1,0 +1,93 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h3 class="title">My Devices</h3>
+      <p class="sub">Control your assigned devices and check current status.</p>
+    </div>
+
+    <div class="header-actions">
+      <input
+        class="search"
+        type="text"
+        placeholder="Search devices..."
+        [(ngModel)]="search"
+      />
+      <button class="btn-refresh" (click)="load()">Refresh</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading devices...</div>
+
+  <div *ngIf="!loading && filteredDevices.length === 0" class="empty">
+    <div class="empty-card">
+      <div class="empty-title">No devices assigned</div>
+      <div class="empty-text">Ask your admin to assign devices to your account.</div>
+    </div>
+  </div>
+
+  <div class="grid" *ngIf="!loading && filteredDevices.length > 0">
+    <div class="device-card" *ngFor="let d of filteredDevices">
+      <!-- ✅ PRO TOP BLOCK (ONLY ONE) -->
+      <div class="top">
+        <div class="name">
+          <span [ngClass]="dotClass(d.status)"></span>
+
+          <div>
+            <div class="device-name">
+              <span class="icon">{{ deviceIcon(d.device_type) }}</span>
+              {{ d.device_name }}
+            </div>
+
+            <div class="device-type">
+              {{ deviceTypeLabel(d.device_type) }}
+              <span *ngIf="d.location">• {{ d.location }}</span>
+            </div>
+
+            <div class="meta-row">
+              <span class="net" [ngClass]="onlineBadgeClass(d)">
+                {{ onlineText(d) }}
+              </span>
+
+              <span class="updated">
+                Last updated: <b>{{ timeAgo(d.updated_at) }}</b>
+                <span class="updated-raw" *ngIf="d.updated_at">
+                  ({{ d.updated_at | date:'medium' }})
+                </span>
+              </span>
+            </div>
+
+            <!-- ✅ Mini chart preview -->
+            <div class="sparkline" title="Sensor preview (demo)">
+              <span
+                class="bar"
+                *ngFor="let h of sparkBars(d)"
+                [style.height.%]="h"
+              ></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="right">
+          <span class="badge" [ngClass]="badgeClass(d.status)">{{ d.status }}</span>
+
+          <!-- ✅ Toggle switch -->
+          <label class="switch" [class.disabled]="toggling[d.id]">
+            <input
+              type="checkbox"
+              [checked]="d.status === 'ON'"
+              [disabled]="toggling[d.id]"
+              (change)="onToggleChange(d, $event)"
+            />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="actions">
+        <button class="btn-outline" (click)="showInfo(d)">View Info</button>
+      </div>
+    </div>
+  </div>
+</div>

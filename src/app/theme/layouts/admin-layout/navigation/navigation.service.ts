@@ -3,7 +3,7 @@ import { NavigationItem } from './navigation';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
-  getRole(): string {
+  private getRole(): string {
     return (localStorage.getItem('role') || '').toLowerCase();
   }
 
@@ -13,6 +13,9 @@ export class NavigationService {
     const isUser = role === 'user';
 
     const menu: NavigationItem[] = [
+      // ==========================
+      // DASHBOARD
+      // ==========================
       {
         id: 'dashboard',
         title: 'Dashboard',
@@ -49,44 +52,107 @@ export class NavigationService {
         ]
       },
 
+      // ==========================
+      // SERVICES
+      // ==========================
       {
-        id: 'authentication',
-        title: 'Authentication',
-        type: 'group' as const,
-        icon: 'icon-navigation',
-        children: [
-          {
-            id: 'login',
-            title: 'Login',
-            type: 'item' as const,
-            classes: 'nav-item',
-            url: '/login',
-            icon: 'login',
-            target: true,
-            breadcrumbs: false
-          }
-        ]
-      },
-
-      {
-        id: 'utilities',
+        id: 'services',
         title: 'Services',
         type: 'group' as const,
         icon: 'icon-navigation',
         children: [
-          { id: 'monitoring', title: 'Monitoring', type: 'item' as const, classes: 'nav-item', url: '/monitoring', icon: 'user' },
-          { id: 'analytics', title: 'Analytics', type: 'item' as const, classes: 'nav-item', url: '/analytics', icon: 'line-chart' },
-          { id: 'device-management', title: 'Device Management', type: 'item' as const, classes: 'nav-item', url: '/device-management', icon: 'rocket' },
+          {
+            id: 'monitoring',
+            title: 'Monitoring',
+            type: 'item' as const,
+            classes: 'nav-item',
+            url: '/monitoring',
+            icon: 'user'
+          },
+          {
+            id: 'analytics',
+            title: 'Analytics',
+            type: 'item' as const,
+            classes: 'nav-item',
+            url: '/analytics',
+            icon: 'line-chart'
+          },
+
           ...(isAdmin
-            ? [{
-              id: 'users',
-              title: 'Users',
-              type: 'item' as const,
-              classes: 'nav-item',
-              url: '/users',
-              icon: 'user'
-            }]
+            ? [
+              {
+                id: 'device-management',
+                title: 'Device Management',
+                type: 'item' as const,
+                classes: 'nav-item',
+                url: '/device-management',
+                icon: 'rocket'
+              },
+              {
+                id: 'users',
+                title: 'Users',
+                type: 'item' as const,
+                classes: 'nav-item',
+                url: '/users',
+                icon: 'user'
+              }
+            ]
             : []),
+
+          ...(isUser
+            ? [
+              {
+                id: 'my-devices',
+                title: 'My Devices',
+                type: 'item' as const,
+                classes: 'nav-item',
+                url: '/my-devices',
+                icon: 'rocket'
+              }
+            ]
+            : []),
+
+          {
+            id: 'ant-icons',
+            title: 'Ant Icons',
+            type: 'item' as const,
+            classes: 'nav-item',
+            url: 'https://ant.design/components/icon',
+            icon: 'ant-design',
+            target: true,
+            external: true
+          },
+          {
+            id: 'logout',
+            title: 'Logout',
+            type: 'item' as const,
+            classes: 'nav-item',
+            url: '/logout',
+            icon: 'logout',
+            breadcrumbs: false
+          }
+
+
+        ]
+      },
+
+      // ==========================
+      // OTHER
+      // ==========================
+      {
+        id: 'other',
+        title: 'Other',
+        type: 'group' as const,
+        icon: 'icon-navigation',
+        children: [
+          {
+            id: 'sample-page',
+            title: 'Sample Page',
+            type: 'item' as const,
+            url: '/sample-page',
+            classes: 'nav-item',
+            icon: 'chrome'
+          }
         ]
       }
     ];

@@ -102,7 +102,14 @@ const routes: Routes = [
         loadComponent: () =>
           import('./demo/component/basic-component/profile/profile.component')
             .then(c => c.ProfileComponent)
-      }
+      },
+      {
+        path: 'my-devices',
+        loadComponent: () =>
+          import('./demo/component/basic-component/my-devices/my-devices.component')
+            .then(c => c.MyDevicesComponent)
+      },
+
     ]
   },
 

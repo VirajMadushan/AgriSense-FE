@@ -1,7 +1,14 @@
 <div class="card">
   <div class="card-header d-flex align-items-center justify-content-between">
     <h4 class="mb-0">Device Management</h4>
-    <button class="btn btn-primary" (click)="openCreate()">+ Add Device</button>
+
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" (click)="downloadAllDevicesPdf()">
+        ⬇ Download Report
+      </button>
+
+      <button class="btn btn-primary" (click)="openCreate()">+ Add Device</button>
+    </div>
   </div>
 
   <div class="card-body">
@@ -16,7 +23,7 @@
             <th>Status</th>
             <th>Assigned To</th>
             <th>Location</th>
-            <th style="width: 180px;">Actions</th>
+            <th style="width: 280px;">Actions</th>
           </tr>
         </thead>
 
@@ -24,15 +31,31 @@
           <tr *ngFor="let d of devices">
             <td>{{ d.device_name }}</td>
             <td>{{ d.device_type }}</td>
+
             <td>
               <span class="badge bg-success" *ngIf="d.status === 'ON'">ON</span>
               <span class="badge bg-secondary" *ngIf="d.status !== 'ON'">OFF</span>
             </td>
+
             <td>{{ d.assigned_user_name || 'Unassigned' }}</td>
             <td>{{ d.location || '-' }}</td>
+
             <td>
-              <button class="btn btn-sm btn-outline-primary me-2" (click)="openEdit(d)">Edit</button>
-              <button class="btn btn-sm btn-outline-danger" (click)="remove(d)">Delete</button>
+              <button class="btn btn-sm btn-outline-secondary me-2" (click)="downloadDevicePdf(d)">
+                PDF
+              </button>
+
+              <button class="btn btn-sm btn-outline-dark me-2" (click)="viewHistory(d.id!)" [disabled]="!d.id">
+                History
+              </button>
+
+              <button class="btn btn-sm btn-outline-primary me-2" (click)="openEdit(d)">
+                Edit
+              </button>
+
+              <button class="btn btn-sm btn-outline-danger" (click)="remove(d)">
+                Delete
+              </button>
             </td>
           </tr>
 

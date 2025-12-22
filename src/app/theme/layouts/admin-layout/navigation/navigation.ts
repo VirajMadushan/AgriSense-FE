@@ -116,6 +116,14 @@ export const NavigationItems: NavigationItem[] = [
         url: '/device-management',
         icon: 'rocket'
       },
+       {
+        id: 'devices',
+        title: 'Devices',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/my-devices',
+        icon: 'rocket'
+      },
       {
         id: 'ant-icons',
         title: 'Ant Icons',
