@@ -76,7 +76,7 @@ export class NavigationService {
         children: [
           { id: 'monitoring', title: 'Monitoring', type: 'item' as const, classes: 'nav-item', url: '/monitoring', icon: 'user' },
           { id: 'analytics', title: 'Analytics', type: 'item' as const, classes: 'nav-item', url: '/analytics', icon: 'line-chart' },
-          { id: 'devices', title: 'Devices', type: 'item' as const, classes: 'nav-item', url: '/devices', icon: 'rocket' },
+          { id: 'device-management', title: 'Device Management', type: 'item' as const, classes: 'nav-item', url: '/device-management', icon: 'rocket' },
           ...(isAdmin
             ? [{
               id: 'users',
