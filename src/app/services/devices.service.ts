@@ -12,7 +12,7 @@ export interface DeviceDto {
   assigned_user_id?: number | null;
   assigned_user_name?: string | null;
 
-  // ✅ add these (your backend already returns them)
+
   created_at?: string | null;
   updated_at?: string | null;
 }
@@ -49,8 +49,24 @@ export class DevicesService {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  // ✅ required for history popup
   getHistory(deviceId: number): Observable<DeviceLogDto[]> {
     return this.http.get<DeviceLogDto[]>(`${this.baseUrl}/${deviceId}/history`);
   }
+
+  getReport(deviceId: number) {
+    return this.http.get<{ device: DeviceDto; history: any[] }>(
+      `${this.baseUrl}/${deviceId}/report`
+    );
+  }
+
+  //  USER APIs
+  getMyDevices(): Observable<DeviceDto[]> {
+  return this.http.get<DeviceDto[]>(`http://localhost:4000/api/my/devices`);
 }
+
+ toggleDevice(id: number): Observable<{ status: 'ON' | 'OFF' }> {
+  return this.http.post<{ status: 'ON' | 'OFF' }>(`${this.baseUrl}/${id}/toggle`, {});
+}
+}
+
+

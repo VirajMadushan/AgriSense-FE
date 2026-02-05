@@ -27,7 +27,8 @@
 
   <div class="grid" *ngIf="!loading && filteredDevices.length > 0">
     <div class="device-card" *ngFor="let d of filteredDevices">
-      <!-- ✅ PRO TOP BLOCK (ONLY ONE) -->
+      
+      <!--  PRO TOP BLOCK (ONLY ONE) -->
       <div class="top">
         <div class="name">
           <span [ngClass]="dotClass(d.status)"></span>
@@ -56,7 +57,7 @@
               </span>
             </div>
 
-            <!-- ✅ Mini chart preview -->
+            <!-- Mini chart preview -->
             <div class="sparkline" title="Sensor preview (demo)">
               <span
                 class="bar"
@@ -70,7 +71,7 @@
         <div class="right">
           <span class="badge" [ngClass]="badgeClass(d.status)">{{ d.status }}</span>
 
-          <!-- ✅ Toggle switch -->
+          <!--  Toggle switch -->
           <label class="switch" [class.disabled]="toggling[d.id]">
             <input
               type="checkbox"

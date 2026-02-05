@@ -294,4 +294,61 @@ export class DeviceManagementComponent implements OnInit {
         })
     });
   }
+  downloadDeviceReportPdf(deviceId: number) {
+  this.devicesService.getReport(deviceId).subscribe({
+    next: ({ device, history }) => {
+      const doc = new jsPDF();
+
+      // Header
+      doc.setFontSize(18);
+      doc.text('AgriSense - Device Report', 14, 16);
+
+      doc.setFontSize(11);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 24);
+
+      // Device details block
+      const details = [
+        ['Device Name', device.device_name || '—'],
+        ['Type', device.device_type || '—'],
+        ['Status', device.status || '—'],
+        ['Assigned To', device.assigned_user_name || 'Unassigned'],
+        ['Location', device.location || '—'],
+        ['Created At', this.formatDate(device.created_at)],
+        ['Updated At', this.formatDate(device.updated_at)]
+      ];
+
+      autoTable(doc, {
+        startY: 30,
+        head: [['Field', 'Value']],
+        body: details
+      });
+
+      // History table
+      autoTable(doc, {
+        startY: (doc as any).lastAutoTable.finalY + 10,
+        head: [['Date/Time', 'Action', 'Old', 'New', 'By', 'Note']],
+        body: (history || []).map((h: any) => [
+          h.created_at ? new Date(h.created_at).toLocaleString() : '—',
+          h.action || '—',
+          h.old_value ?? '—',
+          h.new_value ?? '—',
+          h.created_by_name || 'System',
+          h.note || ''
+        ]),
+        styles: { fontSize: 9 },
+        headStyles: { fontSize: 9 }
+      });
+
+      doc.save(`device-report-${(device.device_name || 'device').replace(/\s+/g, '-')}.pdf`);
+    },
+    error: (err) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Report failed',
+        text: err?.error?.message || 'Could not generate report'
+      });
+    }
+  });
+}
+
 }

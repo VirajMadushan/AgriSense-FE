@@ -41,6 +41,10 @@
             <td>{{ d.location || '-' }}</td>
 
             <td>
+              <button class="btn btn-sm btn-outline-dark me-2" (click)="downloadDeviceReportPdf(d.id!)"
+                [disabled]="!d.id">
+                Report PDF
+              </button>
               <button class="btn btn-sm btn-outline-secondary me-2" (click)="downloadDevicePdf(d)">
                 PDF
               </button>
@@ -110,6 +114,7 @@
       <div class="d-flex justify-content-end gap-2">
         <button type="button" class="btn btn-light" (click)="closeModal()">Cancel</button>
         <button type="submit" class="btn btn-primary">{{ isEdit ? 'Update' : 'Create' }}</button>
+
       </div>
     </form>
   </div>

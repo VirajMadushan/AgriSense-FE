@@ -1,0 +1,49 @@
+<div *ngIf="loading" class="text-center p-4">
+  <p>Loading dashboard...</p>
+</div>
+
+<div *ngIf="!loading && me">
+
+  <!-- Welcome -->
+  <div class="mb-3">
+    <h3>Welcome, {{ me.full_name }} 👋</h3>
+    <p class="text-muted">Your device overview</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row g-3 mb-3">
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <div class="text-muted">Total Devices</div>
+        <div class="fw-bold fs-3">{{ devices.total }}</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <div class="text-muted">Devices ON</div>
+        <div class="fw-bold fs-3 text-success">{{ devices.on }}</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <div class="text-muted">Devices OFF</div>
+        <div class="fw-bold fs-3 text-danger">{{ devices.off }}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Chart -->
+  <div class="card p-3">
+    <apx-chart
+      [series]="donutOptions.series"
+      [chart]="donutOptions.chart"
+      [labels]="donutOptions.labels"
+      [title]="donutOptions.title">
+    </apx-chart>
+  </div>
+
+</div>
