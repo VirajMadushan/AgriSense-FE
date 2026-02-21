@@ -1,1 +1,51 @@
-<p>monitoring works!</p>
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h3 class="title">Monitoring</h3>
+      <p class="sub">Live sensor readings (dummy now, real sensors later).</p>
+    </div>
+
+    <button class="btn-refresh" (click)="load()">Refresh</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading live readings...</div>
+
+  <div class="grid" *ngIf="!loading && rows.length">
+    <div class="card" *ngFor="let r of rows">
+      <div class="top">
+        <div class="name">
+          <div class="device">{{ r.device_name }}</div>
+          <div class="meta">
+            <span class="pill" [ngClass]="statusClass(r.status)">{{ r.status }}</span>
+            <span *ngIf="r.location">• {{ r.location }}</span>
+          </div>
+        </div>
+
+        <div class="time" *ngIf="r.created_at">
+          {{ r.created_at | date:'short' }}
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Temperature</div>
+          <div class="val">{{ r.temperature ?? '--' }} <span class="u">°C</span></div>
+        </div>
+
+        <div class="stat">
+          <div class="label">Humidity</div>
+          <div class="val">{{ r.humidity ?? '--' }} <span class="u">%</span></div>
+        </div>
+
+        <div class="stat">
+          <div class="label">Soil Moisture</div>
+          <div class="val">{{ r.soil_moisture ?? '--' }} <span class="u">%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty" *ngIf="!loading && !rows.length">
+    No devices found. Add devices first.
+  </div>
+</div>
