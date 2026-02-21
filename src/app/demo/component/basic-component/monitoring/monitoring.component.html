@@ -10,8 +10,12 @@
 
   <div *ngIf="loading" class="loading">Loading live readings...</div>
 
+  <!-- CARDS GRID -->
   <div class="grid" *ngIf="!loading && rows.length">
-    <div class="card" *ngFor="let r of rows">
+    <div class="card"
+         *ngFor="let r of rows"
+         [class.active]="selectedDevice?.device_id === r.device_id">
+
       <div class="top">
         <div class="name">
           <div class="device">{{ r.device_name }}</div>
@@ -42,10 +46,35 @@
           <div class="val">{{ r.soil_moisture ?? '--' }} <span class="u">%</span></div>
         </div>
       </div>
+
+      <div class="actions">
+        <button class="btn-refresh" (click)="selectDevice(r)">
+          View Graph
+        </button>
+      </div>
     </div>
   </div>
 
   <div class="empty" *ngIf="!loading && !rows.length">
     No devices found. Add devices first.
+  </div>
+
+  <!-- GRAPH SECTION BELOW GRID -->
+  <div class="chart-section" *ngIf="selectedDevice">
+    <div class="chart-header">
+      <h4>{{ selectedDevice.device_name }} - Sensor Trend</h4>
+      <button class="btn-refresh" (click)="closeChart()">Close</button>
+    </div>
+
+    <div *ngIf="chartLoading" class="loading">Loading chart...</div>
+
+    <div class="chart-box" style="height: 420px;" *ngIf="!chartLoading">
+      <canvas
+        baseChart
+        [type]="'line'"
+        [data]="chartData"
+        [options]="chartOptions">
+      </canvas>
+    </div>
   </div>
 </div>

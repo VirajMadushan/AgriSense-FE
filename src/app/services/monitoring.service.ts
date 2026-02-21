@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+
+
 
 export interface LiveReadingDto {
   device_id: number;
@@ -35,4 +39,5 @@ export class MonitoringService {
   getHistory(deviceId: number): Observable<ReadingHistoryDto[]> {
     return this.http.get<ReadingHistoryDto[]>(`${this.baseUrl}/device/${deviceId}`);
   }
+  
 }

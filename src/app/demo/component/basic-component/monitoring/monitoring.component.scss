@@ -48,3 +48,31 @@
 .u { font-size: 12px; opacity: .7; font-weight: 600; }
 
 .empty { padding: 18px; opacity: .75; }
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.card.active {
+  border: 2px solid rgba(99, 102, 241, 0.9);
+}
+
+.chart-section {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.chart-box {
+  height: 420px;
+}
