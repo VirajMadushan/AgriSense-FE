@@ -1,6 +1,7 @@
-<!-- TOP CARDS -->
+<!-- TOP KPI CARDS -->
 <div class="row g-3 mb-4">
 
+  <!-- Existing device KPIs -->
   <div class="col-md-3">
     <div class="card p-3">
       <div class="text-muted">Total Devices</div>
@@ -31,8 +32,41 @@
 
 </div>
 
-<!-- CHARTS -->
-<div class="row g-3">
+<!-- NEW: GREENHOUSE KPI CARDS -->
+<div class="row g-3 mb-4">
+
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted">Total Greenhouses</div>
+      <div class="fw-bold fs-3">{{ overview?.kpis.total_greenhouses ?? 0 }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted">Total Zones</div>
+      <div class="fw-bold fs-3">{{ overview?.kpis.total_sections ?? 0 }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted">Sensors</div>
+      <div class="fw-bold fs-3">{{ overview?.kpis.total_sensors ?? 0 }}</div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted">Motors</div>
+      <div class="fw-bold fs-3">{{ overview?.kpis.total_motors ?? 0 }}</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CHARTS ROW -->
+<div class="row g-3 mb-4">
 
   <div class="col-md-6">
     <div class="card p-3">
@@ -40,7 +74,8 @@
         [series]="statusChart.series"
         [chart]="statusChart.chart"
         [labels]="statusChart.labels"
-        [title]="statusChart.title">
+        [title]="statusChart.title"
+        [legend]="statusChart.legend">
       </apx-chart>
     </div>
   </div>
@@ -51,8 +86,75 @@
         [series]="assignmentChart.series"
         [chart]="assignmentChart.chart"
         [xaxis]="assignmentChart.xaxis"
-        [title]="assignmentChart.title">
+        [title]="assignmentChart.title"
+        [plotOptions]="assignmentChart.plotOptions"
+        [dataLabels]="assignmentChart.dataLabels">
       </apx-chart>
+    </div>
+  </div>
+
+</div>
+
+<!-- NEW: DEVICES PER GREENHOUSE + ZONE HEALTH GRID -->
+<div class="row g-3">
+
+  <div class="col-md-6">
+    <div class="card p-3">
+      <apx-chart
+        [series]="greenhouseDevicesChart.series"
+        [chart]="greenhouseDevicesChart.chart"
+        [xaxis]="greenhouseDevicesChart.xaxis"
+        [title]="greenhouseDevicesChart.title"
+        [plotOptions]="greenhouseDevicesChart.plotOptions"
+        [dataLabels]="greenhouseDevicesChart.dataLabels">
+      </apx-chart>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="fw-bold">Zone Health (Latest)</div>
+        <div class="text-muted" style="font-size: 12px;">
+          Green=OK • Yellow=Warning • Red=Critical
+        </div>
+      </div>
+
+      <div class="zone-grid">
+        <div
+          class="zone-tile"
+          *ngFor="let z of overview?.zoneStatus"
+          [ngClass]="zoneHealth(z)">
+
+          <div class="zone-top">
+            <div class="zone-title">Zone {{ z.section_code }}</div>
+            <div class="zone-sub">GH #{{ z.greenhouse_id }}</div>
+          </div>
+
+          <div class="zone-metrics">
+            <div class="m">
+              <div class="k">Temp</div>
+              <div class="v">{{ fmt(z.avg_temp,'°C') }}</div>
+            </div>
+            <div class="m">
+              <div class="k">Humidity</div>
+              <div class="v">{{ fmt(z.avg_hum,'%') }}</div>
+            </div>
+            <div class="m">
+              <div class="k">Soil</div>
+              <div class="v">{{ fmt(z.avg_soil,'%') }}</div>
+            </div>
+          </div>
+
+          <div class="zone-time" *ngIf="z.last_update">
+            Last update: {{ z.last_update | date:'short' }}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!overview?.zoneStatus?.length" class="text-muted">
+        No zone data yet. Add devices + sensor readings.
+      </div>
     </div>
   </div>
 

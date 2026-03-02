@@ -1,3 +1,39 @@
-.card {
-  border-radius: 14px;
+.zone-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
+
+.zone-tile {
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+.zone-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.zone-title { font-weight: 800; }
+.zone-sub { font-size: 12px; color: #6b7280; }
+
+.zone-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.m .k { font-size: 12px; color: #6b7280; }
+.m .v { font-weight: 800; }
+
+.zone-time { margin-top: 10px; font-size: 12px; color: #6b7280; }
+
+/* Health colors */
+.zone-tile.healthy { border-left: 4px solid #16a34a; background: rgba(22,163,74,0.05); }
+.zone-tile.warning { border-left: 4px solid #f59e0b; background: rgba(245,158,11,0.06); }
+.zone-tile.critical { border-left: 4px solid #ef4444; background: rgba(239,68,68,0.06); }
+.zone-tile.no-data { border-left: 4px solid #94a3b8; background: rgba(148,163,184,0.08); }

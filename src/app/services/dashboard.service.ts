@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface AdminDashboardStats {
-    users: { total: number; 
-    admins: number; 
-    normalUsers: number; 
-  }; 
-  devices:{
-    total:number;
-    on:number;
-    off:number;
+  users: {
+    total: number;
+    admins: number;
+    normalUsers: number;
+  };
+  devices: {
+    total: number;
+    on: number;
+    off: number;
     assigned: number;
     unassigned: number;
   };
@@ -31,6 +32,34 @@ export interface UserDashboardStats {
   };
 }
 
+/** ✅ NEW TYPE (this fixes your error) */
+export interface GreenhouseOverview {
+  kpis: {
+    total_greenhouses: number;
+    total_sections: number;
+    total_devices: number;
+    total_sensors: number;
+    total_motors: number;
+  };
+  greenhouses: Array<{
+    id: number;
+    name: string;
+    total_area_m2: number;
+    section_count: number;
+    zones: number;
+    devices: number;
+  }>;
+  zoneStatus: Array<{
+    section_id: number;
+    greenhouse_id: number;
+    section_code: string;
+    avg_temp: number | null;
+    avg_hum: number | null;
+    avg_soil: number | null;
+    last_update: string | null;
+  }>;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   private baseUrl = 'http://localhost:4000/api/dashboard';
@@ -43,5 +72,10 @@ export class DashboardService {
 
   getUserStats(): Observable<UserDashboardStats> {
     return this.http.get<UserDashboardStats>(`${this.baseUrl}/user`);
+  }
+
+  /** ✅ Typed method */
+  getGreenhouseOverview(): Observable<GreenhouseOverview> {
+    return this.http.get<GreenhouseOverview>(`${this.baseUrl}/greenhouse-overview`);
   }
 }
