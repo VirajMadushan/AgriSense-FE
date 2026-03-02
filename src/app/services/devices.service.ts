@@ -59,6 +59,13 @@ export class DevicesService {
     );
   }
 
+  assignToZone(deviceId: number, greenhouse_id: number | null, section_id: number | null) {
+  return this.http.patch(`http://localhost:4000/api/devices/${deviceId}/assign`, {
+    greenhouse_id,
+    section_id
+  });
+}
+
   //  USER APIs
   getMyDevices(): Observable<DeviceDto[]> {
   return this.http.get<DeviceDto[]>(`http://localhost:4000/api/my/devices`);

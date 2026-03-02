@@ -20,6 +20,13 @@ export interface SectionDto {
   sensor_count?: number;
   motor_count?: number;
 }
+export interface SectionWithGhDto extends SectionDto {
+  greenhouse_id: number;
+}
+
+export interface GreenhouseWithSectionsDto extends GreenhouseDto {
+  sections: SectionWithGhDto[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class GreenhousesService {
@@ -37,5 +44,8 @@ export class GreenhousesService {
 
   getById(id: number) {
     return this.http.get<{ greenhouse: GreenhouseDto; sections: SectionDto[] }>(`${this.baseUrl}/${id}`);
+  }
+  getWithSections(): Observable<GreenhouseWithSectionsDto[]> {
+    return this.http.get<GreenhouseWithSectionsDto[]>(`${this.baseUrl}/with-sections`);
   }
 }
