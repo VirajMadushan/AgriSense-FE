@@ -95,6 +95,31 @@ export class NavigationService {
                 classes: 'nav-item',
                 url: '/users',
                 icon: 'user'
+              },
+              {
+                id: 'greenhouse-menu',
+                title: 'Greenhouses',
+                type: 'collapse' as const,
+                classes: 'nav-item',
+                icon: 'appstore',
+                children: [
+                  {
+                    id: 'greenhouses',
+                    title: 'All Greenhouses',
+                    type: 'item' as const,
+                    classes: 'nav-item',
+                    url: '/greenhouses',
+                    icon: 'unordered-list'
+                  },
+                  {
+                    id: 'greenhouses-create',
+                    title: 'Create Greenhouse',
+                    type: 'item' as const,
+                    classes: 'nav-item',
+                    url: '/greenhouses/create',
+                    icon: 'plus'
+                  }
+                ]
               }
             ]
             : []),
