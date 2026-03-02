@@ -1,0 +1,48 @@
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h3 class="title">Create Greenhouse</h3>
+      <p class="sub">Enter total area and auto-generate smart zones.</p>
+    </div>
+  </div>
+
+  <div class="card form-card">
+    <div class="form-row">
+      <div class="label">Greenhouse Name</div>
+      <input class="input" [(ngModel)]="name" placeholder="GH-01" />
+    </div>
+
+    <div class="form-row">
+      <div class="label">Total Area (m²)</div>
+      <input class="input" type="number" [(ngModel)]="totalArea" min="1" />
+    </div>
+
+    <div class="form-row">
+      <div class="label">Sections</div>
+      <select class="input" [(ngModel)]="sectionCount">
+        <option [ngValue]="4">4 (A–D)</option>
+        <option [ngValue]="6">6 (A–F)</option>
+        <option [ngValue]="8">8 (A–H)</option>
+      </select>
+    </div>
+
+    <div class="preview">
+      <div class="preview-title">Auto Section Preview</div>
+
+      <div class="grid">
+        <div class="card preview-card" *ngFor="let idx of previewArray">
+          <div class="device">Zone {{ sectionCode(idx) }}</div>
+          <div class="meta">
+            <span class="pill on">{{ perSection }} m²</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-refresh" (click)="submit()" [disabled]="saving">
+        {{ saving ? 'Creating...' : 'Create Greenhouse' }}
+      </button>
+    </div>
+  </div>
+</div>

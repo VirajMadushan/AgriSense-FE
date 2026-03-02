@@ -13,11 +13,9 @@ export interface GreenhouseDto {
 
 export interface SectionDto {
   id: number;
-  greenhouse_id?: number;
   section_code: string;
   area_m2: number;
 
-  // comes from Step 4 query (if you updated GET /:id)
   total_devices?: number;
   sensor_count?: number;
   motor_count?: number;
@@ -33,11 +31,11 @@ export class GreenhousesService {
     return this.http.get<GreenhouseDto[]>(this.baseUrl);
   }
 
-  create(payload: { name: string; total_area_m2: number; section_count?: number }): Observable<any> {
-    return this.http.post(this.baseUrl, payload);
+  create(payload: { name: string; total_area_m2: number; section_count?: number }) {
+    return this.http.post<{ greenhouse: GreenhouseDto; sections: SectionDto[] }>(this.baseUrl, payload);
   }
 
-  getById(id: number): Observable<{ greenhouse: GreenhouseDto; sections: SectionDto[] }> {
+  getById(id: number) {
     return this.http.get<{ greenhouse: GreenhouseDto; sections: SectionDto[] }>(`${this.baseUrl}/${id}`);
   }
 }

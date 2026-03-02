@@ -72,19 +72,6 @@ const routes: Routes = [
             .then(c => c.DeviceManagementComponent),
         canActivate: [adminGuard]
       },
-
-      {
-        path: 'color',
-        loadComponent: () =>
-          import('./demo/component/basic-component/color/color.component')
-            .then(c => c.ColorComponent)
-      },
-      {
-        path: 'sample-page',
-        loadComponent: () =>
-          import('./demo/others/sample-page/sample-page.component')
-            .then(c => c.SamplePageComponent)
-      },
       {
         path: 'analytics',
         loadComponent: () =>
@@ -108,6 +95,26 @@ const routes: Routes = [
         loadComponent: () =>
           import('./demo/component/basic-component/my-devices/my-devices.component')
             .then(c => c.MyDevicesComponent)
+      },
+
+      {
+        path: 'greenhouses',
+        loadComponent: () =>
+          import('./demo/component/basic-component/greenhouses/greenhouses.component')
+            .then(c => c.GreenhousesComponent)
+      },
+      {
+        path: 'greenhouses/create',
+        loadComponent: () =>
+          import('./demo/component/basic-component/greenhouse-create/greenhouse-create.component')
+            .then(c => c.GreenhouseCreateComponent),
+        canActivate: [adminGuard] // optional: only admin can create greenhouses
+      },
+      {
+        path: 'greenhouses/:id',
+        loadComponent: () =>
+          import('./demo/component/basic-component/greenhouse-details/greenhouse-details.component')
+            .then(c => c.GreenhouseDetailsComponent)
       },
 
     ]

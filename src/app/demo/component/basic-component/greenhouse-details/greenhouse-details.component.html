@@ -1,0 +1,51 @@
+<div class="page-wrap">
+  <div class="page-header" *ngIf="greenhouse">
+    <div>
+      <h3 class="title">{{ greenhouse.name }}</h3>
+      <p class="sub">
+        {{ greenhouse.total_area_m2 }} m² • {{ greenhouse.section_count }} zones
+      </p>
+    </div>
+
+    <a class="btn-refresh" routerLink="/greenhouses">Back</a>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading greenhouse...</div>
+
+  <div class="grid" *ngIf="!loading && sections.length">
+    <div class="card zone-card" *ngFor="let s of sections">
+      <div class="top">
+        <div class="name">
+          <div class="device">Zone {{ s.section_code }}</div>
+          <div class="meta">
+            <span class="pill on">{{ s.area_m2 }} m²</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Devices</div>
+          <div class="val">{{ s.total_devices ?? 0 }}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Sensors</div>
+          <div class="val">{{ s.sensor_count ?? 0 }}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Motors</div>
+          <div class="val">{{ s.motor_count ?? 0 }}</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <!-- next step: section details + assign devices -->
+        <button class="btn-refresh" disabled>Open Section (Next)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty" *ngIf="!loading && !sections.length">
+    No sections found.
+  </div>
+</div>
