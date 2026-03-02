@@ -51,13 +51,6 @@ const routes: Routes = [
       },
 
       {
-        path: 'typography',
-        loadComponent: () =>
-          import('./demo/component/basic-component/typography/typography.component')
-            .then(c => c.TypographyComponent)
-      },
-
-      {
         path: 'users',
         loadComponent: () =>
           import('./demo/component/basic-component/users/users.component')
@@ -108,7 +101,7 @@ const routes: Routes = [
         loadComponent: () =>
           import('./demo/component/basic-component/greenhouse-create/greenhouse-create.component')
             .then(c => c.GreenhouseCreateComponent),
-        canActivate: [adminGuard] // optional: only admin can create greenhouses
+        canActivate: [adminGuard] 
       },
       {
         path: 'greenhouses/:id',

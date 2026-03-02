@@ -156,7 +156,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Document',
         type: 'item',
         classes: 'nav-item',
-        url: 'https://codedthemes.gitbook.io/mantis-angular/',
+        url: 'https://www.linkedin.com/in/viraj-madushan-747a09257/',
         icon: 'question',
         target: true,
         external: true

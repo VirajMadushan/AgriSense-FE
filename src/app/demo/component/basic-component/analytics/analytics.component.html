@@ -1,1 +1,58 @@
-<p>analytics works!</p>
+<div class="an-page">
+  <div class="an-header">
+    <div>
+      <h3 class="title">Analytics</h3>
+      <p class="sub">Basic averages + smart alerts from latest sensor readings.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" (click)="refreshAll(true)">Refresh</button>
+      <button class="btn primary" (click)="runNow()">Run Alert Check</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading analytics...</div>
+
+  <!-- KPI cards -->
+  <div class="kpis" *ngIf="!loading">
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Temperature (24h)</div>
+      <div class="kpi-value">{{ summary?.avgTemp ?? '--' }} <span class="unit">°C</span></div>
+      <div class="kpi-foot">Last reading: {{ summary?.lastReadingAt ? (summary?.lastReadingAt | date:'short') : '—' }}</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Humidity (24h)</div>
+      <div class="kpi-value">{{ summary?.avgHum ?? '--' }} <span class="unit">%</span></div>
+      <div class="kpi-foot">Readings: {{ summary?.readingsCount ?? 0 }}</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Soil Moisture (24h)</div>
+      <div class="kpi-value">{{ summary?.avgSoil ?? '--' }} <span class="unit">%</span></div>
+      <div class="kpi-foot">Auto-check every 30 seconds</div>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alerts">
+    <div class="alerts-top">
+      <h4 class="alerts-title">Active Alerts</h4>
+      <span class="count">{{ alerts.length }}</span>
+    </div>
+
+    <div *ngIf="alerts.length === 0" class="empty">
+      No alerts right now ✅
+    </div>
+
+    <div class="alert-card" *ngFor="let a of alerts" [ngClass]="severityClass(a.severity)">
+      <div class="alert-left">
+        <div class="type">{{ a.alert_type }}</div>
+        <div class="msg">{{ a.message }}</div>
+        <div class="time">{{ a.created_at | date:'short' }}</div>
+      </div>
+
+      <div class="badge">{{ a.severity }}</div>
+    </div>
+  </div>
+</div>

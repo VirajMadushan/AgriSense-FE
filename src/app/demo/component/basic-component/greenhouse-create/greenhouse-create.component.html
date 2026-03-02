@@ -1,48 +1,111 @@
-<div class="page-wrap">
-  <div class="page-header">
+<div class="ghc-page">
+  <div class="ghc-header">
     <div>
-      <h3 class="title">Create Greenhouse</h3>
-      <p class="sub">Enter total area and auto-generate smart zones.</p>
+      <h2 class="title">Create Greenhouse</h2>
+      <p class="sub">Enter total area and auto-generate smart zones (A, B, C...).</p>
     </div>
+
+    <a class="btn ghost" routerLink="/greenhouses">← Back</a>
   </div>
 
-  <div class="card form-card">
-    <div class="form-row">
-      <div class="label">Greenhouse Name</div>
-      <input class="input" [(ngModel)]="name" placeholder="GH-01" />
-    </div>
+  <div class="layout">
+    <!-- LEFT: form -->
+    <div class="card">
+      <div class="card-head">
+        <div class="head-title">Greenhouse Details</div>
+        <div class="head-sub">This will create zones automatically.</div>
+      </div>
 
-    <div class="form-row">
-      <div class="label">Total Area (m²)</div>
-      <input class="input" type="number" [(ngModel)]="totalArea" min="1" />
-    </div>
-
-    <div class="form-row">
-      <div class="label">Sections</div>
-      <select class="input" [(ngModel)]="sectionCount">
-        <option [ngValue]="4">4 (A–D)</option>
-        <option [ngValue]="6">6 (A–F)</option>
-        <option [ngValue]="8">8 (A–H)</option>
-      </select>
-    </div>
-
-    <div class="preview">
-      <div class="preview-title">Auto Section Preview</div>
-
-      <div class="grid">
-        <div class="card preview-card" *ngFor="let idx of previewArray">
-          <div class="device">Zone {{ sectionCode(idx) }}</div>
-          <div class="meta">
-            <span class="pill on">{{ perSection }} m²</span>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field">
+          <label>Greenhouse Name</label>
+          <input class="input" placeholder="GH-01" formControlName="name" />
+          <div class="err" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">
+            Name is required (min 2 characters).
           </div>
         </div>
-      </div>
+
+        <div class="row2">
+          <div class="field">
+            <label>Total Area (m²)</label>
+            <input class="input" type="number" min="1" step="0.01" formControlName="total_area_m2" />
+            <div class="hint">Example: 1000 m²</div>
+          </div>
+
+          <div class="field">
+            <label>Sections (Zones)</label>
+            <select class="input" formControlName="section_count">
+              <option *ngFor="let s of sectionOptions" [ngValue]="s">
+                {{ s }} zones ({{ zoneRangeLabel(s) }})
+              </option>
+            </select>
+            <div class="hint">Default is 4 zones (A–D)</div>
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="sum-item">
+            <div class="k">Zones</div>
+            <div class="v">{{ form.value.section_count }}</div>
+          </div>
+          <div class="sum-item">
+            <div class="k">Per Zone</div>
+            <div class="v">{{ perZoneArea | number:'1.0-2' }} m²</div>
+          </div>
+          <div class="sum-item">
+            <div class="k">Total Area</div>
+            <div class="v">{{ form.value.total_area_m2 | number:'1.0-2' }} m²</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn ghost" routerLink="/greenhouses">Cancel</button>
+          <button type="submit" class="btn primary" [disabled]="loading">
+            {{ loading ? 'Creating...' : 'Create Greenhouse' }}
+          </button>
+        </div>
+      </form>
     </div>
 
-    <div class="actions">
-      <button class="btn-refresh" (click)="submit()" [disabled]="saving">
-        {{ saving ? 'Creating...' : 'Create Greenhouse' }}
-      </button>
+    <!-- RIGHT: preview -->
+    <div class="card">
+      <div class="card-head">
+        <div class="head-title">Auto Section Preview</div>
+        <div class="head-sub">These zones will be created in DB.</div>
+      </div>
+
+      <div class="preview-grid" *ngIf="previewZones.length">
+        <div class="zone" *ngFor="let z of previewZones">
+          <div class="zone-top">
+            <div class="zone-title">Zone {{ z.code }}</div>
+            <span class="pill">{{ z.area | number:'1.0-2' }} m²</span>
+          </div>
+          <div class="zone-sub">Sensors + motors can be assigned later.</div>
+        </div>
+      </div>
+
+      <div class="table-wrap" *ngIf="previewZones.length">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Zone</th>
+              <th>Area (m²)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let z of previewZones">
+              <td><b>{{ z.code }}</b></td>
+              <td>{{ z.area | number:'1.0-2' }}</td>
+              <td><span class="tag">Ready</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty" *ngIf="!previewZones.length">
+        Enter total area + sections to preview zones.
+      </div>
     </div>
   </div>
 </div>

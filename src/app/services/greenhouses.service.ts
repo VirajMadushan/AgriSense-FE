@@ -32,7 +32,7 @@ export interface GreenhouseWithSectionsDto extends GreenhouseDto {
 export class GreenhousesService {
   private baseUrl = 'http://localhost:4000/api/greenhouses';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<GreenhouseDto[]> {
     return this.http.get<GreenhouseDto[]>(this.baseUrl);
@@ -47,5 +47,13 @@ export class GreenhousesService {
   }
   getWithSections(): Observable<GreenhouseWithSectionsDto[]> {
     return this.http.get<GreenhouseWithSectionsDto[]>(`${this.baseUrl}/with-sections`);
+  }
+
+  update(id: number, payload: { name: string; total_area_m2: number; section_count?: number }) {
+    return this.http.put(`${this.baseUrl}/${id}`, payload);
+  }
+
+  delete(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
   }
 }

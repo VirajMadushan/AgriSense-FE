@@ -118,7 +118,16 @@ export class NavigationService {
                     classes: 'nav-item',
                     url: '/greenhouses/create',
                     icon: 'plus'
-                  }
+                  },
+                  {
+                  id: 'greenhouse-details',
+                  title: 'Greenhouse Details',
+                  type: 'item' as const,
+                  classes: 'nav-item',
+                  url: '/greenhouses/details',
+                  icon: 'plus'
+                },
+
                 ]
               }
             ]
@@ -138,16 +147,6 @@ export class NavigationService {
             : []),
 
           {
-            id: 'ant-icons',
-            title: 'Ant Icons',
-            type: 'item' as const,
-            classes: 'nav-item',
-            url: 'https://ant.design/components/icon',
-            icon: 'ant-design',
-            target: true,
-            external: true
-          },
-          {
             id: 'logout',
             title: 'Logout',
             type: 'item' as const,
@@ -160,26 +159,6 @@ export class NavigationService {
 
         ]
       },
-
-      // ==========================
-      // OTHER
-      // ==========================
-      {
-        id: 'other',
-        title: 'Other',
-        type: 'group' as const,
-        icon: 'icon-navigation',
-        children: [
-          {
-            id: 'sample-page',
-            title: 'Sample Page',
-            type: 'item' as const,
-            url: '/sample-page',
-            classes: 'nav-item',
-            icon: 'chrome'
-          }
-        ]
-      }
     ];
 
     return menu;

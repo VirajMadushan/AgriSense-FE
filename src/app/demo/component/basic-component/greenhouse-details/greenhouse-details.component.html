@@ -1,51 +1,98 @@
-<div class="page-wrap">
-  <div class="page-header" *ngIf="greenhouse">
-    <div>
-      <h3 class="title">{{ greenhouse.name }}</h3>
-      <p class="sub">
-        {{ greenhouse.total_area_m2 }} m² • {{ greenhouse.section_count }} zones
-      </p>
-    </div>
-
-    <a class="btn-refresh" routerLink="/greenhouses">Back</a>
-  </div>
-
-  <div *ngIf="loading" class="loading">Loading greenhouse...</div>
-
-  <div class="grid" *ngIf="!loading && sections.length">
-    <div class="card zone-card" *ngFor="let s of sections">
-      <div class="top">
-        <div class="name">
-          <div class="device">Zone {{ s.section_code }}</div>
-          <div class="meta">
-            <span class="pill on">{{ s.area_m2 }} m²</span>
+<div class="ghd-page">
+  <!-- Header -->
+  <div class="ghd-header" *ngIf="greenhouse">
+    <div class="left">
+      <div class="title-row">
+        <div class="badge">GH</div>
+        <div>
+          <h2 class="title">{{ greenhouse.name }}</h2>
+          <div class="sub">
+            <span>{{ greenhouse.total_area_m2 | number:'1.0-2' }} m²</span>
+            <span class="dot">•</span>
+            <span>{{ greenhouse.section_count }} zones</span>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="stats">
-        <div class="stat">
-          <div class="label">Devices</div>
-          <div class="val">{{ s.total_devices ?? 0 }}</div>
+    <div class="right">
+      <a class="btn ghost" routerLink="/greenhouses">← Back</a>
+      <button class="btn primary" (click)="load(greenhouse.id)">Refresh</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis" *ngIf="greenhouse && !loading">
+    <div class="kpi">
+      <div class="kpi-label">Total Devices</div>
+      <div class="kpi-value">{{ totalDevices }}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Sensors</div>
+      <div class="kpi-value">{{ totalSensors }}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Motors</div>
+      <div class="kpi-value">{{ totalMotors }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-card">Loading greenhouse...</div>
+
+  <!-- Zones grid -->
+  <div class="grid" *ngIf="!loading && sections.length">
+    <div class="zone" *ngFor="let s of sections">
+      <div class="zone-top">
+        <div class="zone-left">
+          <div class="zone-title">Zone {{ s.section_code }}</div>
+          <div class="zone-meta">
+            <span class="pill area">{{ s.area_m2 | number:'1.0-2' }} m²</span>
+
+            <span class="pill health"
+              [ngClass]="zoneHealth(s)">
+              {{ healthLabel(zoneHealth(s)) }}
+            </span>
+          </div>
         </div>
-        <div class="stat">
-          <div class="label">Sensors</div>
-          <div class="val">{{ s.sensor_count ?? 0 }}</div>
-        </div>
-        <div class="stat">
-          <div class="label">Motors</div>
-          <div class="val">{{ s.motor_count ?? 0 }}</div>
+
+        <div class="spark">
+          <!-- small visual placeholder (looks like analytics) -->
+          <div class="spark-bar" style="height: 10px"></div>
+          <div class="spark-bar" style="height: 18px"></div>
+          <div class="spark-bar" style="height: 14px"></div>
+          <div class="spark-bar" style="height: 22px"></div>
+          <div class="spark-bar" style="height: 16px"></div>
         </div>
       </div>
 
-      <div class="actions">
-        <!-- next step: section details + assign devices -->
-        <button class="btn-refresh" disabled>Open Section (Next)</button>
+      <div class="zone-stats">
+        <div class="stat">
+          <div class="label">Devices</div>
+          <div class="value">{{ s.total_devices ?? 0 }}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Sensors</div>
+          <div class="value">{{ s.sensor_count ?? 0 }}</div>
+        </div>
+        <div class="stat">
+          <div class="label">Motors</div>
+          <div class="value">{{ s.motor_count ?? 0 }}</div>
+        </div>
+      </div>
+
+      <div class="zone-actions">
+        <!-- NEXT STEP BUTTONS -->
+        <button class="btn ghost" disabled>View Live (Next)</button>
+        <button class="btn primary" disabled>Assign Devices (Next)</button>
+      </div>
+
+      <div class="hint">
+        Next: assign devices to this zone → show live readings + chart.
       </div>
     </div>
   </div>
 
   <div class="empty" *ngIf="!loading && !sections.length">
-    No sections found.
+    No zones found in this greenhouse.
   </div>
 </div>

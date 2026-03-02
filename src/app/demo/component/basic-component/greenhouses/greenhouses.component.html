@@ -1,45 +1,136 @@
-<div class="page-wrap">
-  <div class="page-header">
+<div class="gh-page">
+  <div class="gh-header">
     <div>
-      <h3 class="title">Greenhouses</h3>
-      <p class="sub">Create greenhouse zones and manage devices per section.</p>
+      <h2 class="gh-title">Greenhouses</h2>
+      <p class="gh-sub">Create greenhouse zones and manage devices per section.</p>
     </div>
 
-    <a class="btn-refresh" routerLink="/greenhouses/create">+ Create Greenhouse</a>
+    <button class="gh-btn primary" (click)="goCreate()">
+      + Create Greenhouse
+    </button>
   </div>
 
-  <div *ngIf="loading" class="loading">Loading greenhouses...</div>
+  <!-- KPIs -->
+  <div class="gh-kpis">
+    <div class="kpi">
+      <div class="kpi-label">Total Greenhouses</div>
+      <div class="kpi-value">{{ totalGreenhouses }}</div>
+    </div>
 
-  <div class="grid" *ngIf="!loading && rows.length">
-    <a class="card" *ngFor="let g of rows" [routerLink]="['/greenhouses', g.id]">
-      <div class="top">
-        <div class="name">
-          <div class="device">{{ g.name }}</div>
-          <div class="meta">
-            <span class="pill on">{{ g.section_count }} Zones</span>
-            <span>• {{ g.total_area_m2 }} m²</span>
+    <div class="kpi">
+      <div class="kpi-label">Total Area</div>
+      <div class="kpi-value">
+        {{ totalArea | number:'1.0-2' }} <span class="unit">m²</span>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">Total Zones</div>
+      <div class="kpi-value">{{ totalZones }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-card">
+    Loading greenhouses...
+  </div>
+
+  <!-- Grid -->
+  <div class="gh-page">
+    <div class="gh-header">
+      <div>
+        <h2 class="gh-title">Greenhouses</h2>
+        <p class="gh-sub">Create greenhouse zones and manage devices per section.</p>
+      </div>
+
+      <button class="gh-btn primary" (click)="goCreate()">
+        + Create Greenhouse
+      </button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="gh-kpis">
+      <div class="kpi">
+        <div class="kpi-label">Total Greenhouses</div>
+        <div class="kpi-value">{{ totalGreenhouses }}</div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi-label">Total Area</div>
+        <div class="kpi-value">
+          {{ totalArea | number:'1.0-2' }} <span class="unit">m²</span>
+        </div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi-label">Total Zones</div>
+        <div class="kpi-value">{{ totalZones }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="loading-card">
+      Loading greenhouses...
+    </div>
+
+    <!-- Grid -->
+    <div class="gh-grid" *ngIf="!loading && rows.length; else empty">
+      <div class="gh-card" *ngFor="let g of rows" (click)="openDetails(g.id)">
+        <div class="gh-card-top">
+          <div class="gh-name">
+            <div class="badge">GH</div>
+
+            <div>
+              <div class="name">{{ g.name }}</div>
+              <div class="meta">
+                <span class="pill">{{ g.section_count }} Zones</span>
+                <span class="dot">•</span>
+                <span class="muted">{{ g.total_area_m2 | number:'1.0-2' }} m²</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Actions (stopPropagation so card click won't fire) -->
+          <div class="gh-actions">
+            <button class="gh-btn ghost" (click)="openDetails(g.id); $event.stopPropagation()">
+              View →
+            </button>
+
+            <button class="gh-btn ghost" (click)="editGreenhouse(g); $event.stopPropagation()">
+              Edit
+            </button>
+
+            <button class="gh-btn danger" (click)="deleteGreenhouse(g); $event.stopPropagation()">
+              Delete
+            </button>
           </div>
         </div>
-      </div>
 
-      <div class="stats">
-        <div class="stat">
-          <div class="label">Total Area</div>
-          <div class="val">{{ g.total_area_m2 }} <span class="u">m²</span></div>
+        <div class="gh-split">
+          <div class="info">
+            <div class="label">Total Area</div>
+            <div class="value">{{ g.total_area_m2 | number:'1.0-2' }} <span class="unit">m²</span></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="info">
+            <div class="label">Sections</div>
+            <div class="value">{{ g.section_count }}</div>
+          </div>
         </div>
-        <div class="stat">
-          <div class="label">Sections</div>
-          <div class="val">{{ g.section_count }}</div>
+
+        <div class="gh-footer">
+          <div class="hint">Click to open zones & assign devices</div>
+          <div class="arrow">↗</div>
         </div>
       </div>
+    </div>
 
-      <div class="actions">
-        <span class="btn-refresh">Open</span>
+    <ng-template #empty>
+      <div class="gh-empty" *ngIf="!loading">
+        <div class="empty-title">No greenhouses yet</div>
+        <div class="empty-sub">Create your first greenhouse and auto-generate smart zones.</div>
+        <button class="gh-btn primary" (click)="goCreate()">+ Create Greenhouse</button>
       </div>
-    </a>
-  </div>
-
-  <div class="empty" *ngIf="!loading && !rows.length">
-    No greenhouses yet. Click <b>Create Greenhouse</b>.
+    </ng-template>
   </div>
 </div>

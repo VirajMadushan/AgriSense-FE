@@ -33,4 +33,30 @@ export class GreenhouseDetailsComponent implements OnInit {
       error: () => (this.loading = false)
     });
   }
+  zoneHealth(s: any): 'ok' | 'warn' | 'critical' | 'no-data' {
+  const sensors = Number(s.sensor_count || 0);
+  const devices = Number(s.total_devices || 0);
+
+  if (devices === 0) return 'no-data';
+  if (sensors === 0) return 'warn';
+  if (devices >= 6 && sensors <= 1) return 'critical';
+  return 'ok';
+}
+
+healthLabel(h: string) {
+  if (h === 'ok') return 'OK';
+  if (h === 'warn') return 'Warning';
+  if (h === 'critical') return 'Critical';
+  return 'No Data';
+}
+
+get totalDevices() {
+  return (this.sections || []).reduce((sum, s: any) => sum + Number(s.total_devices || 0), 0);
+}
+get totalSensors() {
+  return (this.sections || []).reduce((sum, s: any) => sum + Number(s.sensor_count || 0), 0);
+}
+get totalMotors() {
+  return (this.sections || []).reduce((sum, s: any) => sum + Number(s.motor_count || 0), 0);
+}
 }
