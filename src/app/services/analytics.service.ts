@@ -28,15 +28,26 @@ export class AnalyticsService {
 
   constructor(private http: HttpClient) {}
 
+  // ✅ averages + last reading time
   getSummary(): Observable<AnalyticsSummary> {
     return this.http.get<AnalyticsSummary>(`${this.baseUrl}/summary`);
   }
 
-  run(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/run`, {});
+  // ✅ run alert generation on backend
+  run(): Observable<{ scannedDevices: number; createdAlerts: number; message: string }> {
+    return this.http.post<{ scannedDevices: number; createdAlerts: number; message: string }>(
+      `${this.baseUrl}/run`,
+      {}
+    );
   }
 
+  // ✅ active alerts
   getAlerts(): Observable<AlertDto[]> {
     return this.http.get<AlertDto[]>(`${this.baseUrl}/alerts`);
+  }
+
+  // ✅ resolve alert
+  resolveAlert(id: number): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/alerts/${id}/resolve`, {});
   }
 }

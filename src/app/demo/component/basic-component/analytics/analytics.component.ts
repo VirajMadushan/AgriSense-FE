@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { forkJoin, Subscription } from 'rxjs';
 
 import { AnalyticsService, AnalyticsSummary, AlertDto } from 'src/app/services/analytics.service';
 
@@ -16,6 +17,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   summary: AnalyticsSummary | null = null;
   alerts: AlertDto[] = [];
   timer: any;
+  sub?: Subscription;
 
   constructor(private analytics: AnalyticsService) {}
 
@@ -28,39 +30,46 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.timer) clearInterval(this.timer);
+    this.sub?.unsubscribe();
   }
 
   refreshAll(showToast = false) {
-    this.loadSummary();
-    this.loadAlerts();
-
-    if (showToast) {
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'Analytics refreshed',
-        showConfirmButton: false,
-        timer: 1200
-      });
-    }
-  }
-
-  loadSummary() {
     this.loading = true;
-    this.analytics.getSummary().subscribe({
-      next: (data) => {
-        this.summary = data;
-        this.loading = false;
-      },
-      error: () => (this.loading = false)
-    });
-  }
 
-  loadAlerts() {
-    this.analytics.getAlerts().subscribe({
-      next: (data) => (this.alerts = data || []),
-      error: () => (this.alerts = [])
+    this.sub?.unsubscribe();
+    this.sub = forkJoin({
+      summary: this.analytics.getSummary(),
+      alerts: this.analytics.getAlerts()
+    }).subscribe({
+      next: ({ summary, alerts }) => {
+        this.summary = summary;
+        this.alerts = alerts || [];
+        this.loading = false;
+
+        if (showToast) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Analytics refreshed',
+            showConfirmButton: false,
+            timer: 1200
+          });
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Analytics load error:', err);
+
+        const code = err?.status;
+        if (code === 401) {
+          Swal.fire({ icon: 'error', title: 'Unauthorized', text: 'Login expired. Please login again.' });
+        } else if (code === 403) {
+          Swal.fire({ icon: 'error', title: 'Forbidden', text: 'You do not have permission to view analytics.' });
+        } else {
+          Swal.fire({ icon: 'error', title: 'Failed', text: err?.error?.message || 'Could not load analytics data.' });
+        }
+      }
     });
   }
 
@@ -76,13 +85,22 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
       if (!r.isConfirmed) return;
 
       this.analytics.run().subscribe({
-        next: () => {
-          this.refreshAll(true);
+        next: (res) => {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: `Scanned ${res?.scannedDevices ?? 0} devices`,
+            showConfirmButton: false,
+            timer: 1400
+          });
+          this.refreshAll(false);
         },
         error: (err) => {
+          console.error('Run analytics error:', err);
           Swal.fire({
             icon: 'error',
-            title: 'Failed',
+            title: 'Run failed',
             text: err?.error?.message || 'Run failed'
           });
         }
